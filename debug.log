@@ -1,0 +1,66 @@
+2026-02-26T17:26:04.107Z [console][debug] __ORCHIDS_NAVIGATE__ http://localhost:3001/login
+2026-02-26T17:32:58.218Z [console][log] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-26T17:38:19.037Z [console][log] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-26T17:38:46.994Z [console][log] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-26T17:32:58.218Z [console][debug] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-26T17:38:19.036Z [console][debug] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-26T17:38:46.994Z [console][debug] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-26T17:32:58.202Z [network][POST 200] /register
+  request: [{"fullName":"John Doe","email":"john@mits.ac.in","password":"johnpass123"}]
+  response: 3:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"SegmentViewNode"]
+5:"$Sreact.fragment"
+17:I["[project]/orchids-projects/hirelytics-platform/src/components/theme-provider.tsx [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_layout_tsx_9eaabbd5._.js"],"ThemeProvider"]
+19:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/client/components/layout-router.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"default"]
+1b:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/client/components/render-from-template-context.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"default"]
+2a:I["[project]/orchids-projects/hirelytics-platform/src/components/ui/sonner.tsx [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_layout_tsx_9eaabbd5._.js"],"Toaster"]
+2c:I["[project]/orchids-projects/hirelytics-platform/node_modules/orchids-visual-edits/dist/index.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_... [truncated]
+2026-02-26T17:38:19.020Z [network][POST 200] /register
+  request: [{"fullName":"John Doe","email":"lakshmipriyaretheesh108@gmail.com","password":"johnpass123"}]
+  response: 3:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"SegmentViewNode"]
+5:"$Sreact.fragment"
+17:I["[project]/orchids-projects/hirelytics-platform/src/components/theme-provider.tsx [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_layout_tsx_9eaabbd5._.js"],"ThemeProvider"]
+19:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/client/components/layout-router.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"default"]
+1b:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/client/components/render-from-template-context.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"default"]
+2a:I["[project]/orchids-projects/hirelytics-platform/src/components/ui/sonner.tsx [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_layout_tsx_9eaabbd5._.js"],"Toaster"]
+2c:I["[project]/orchids-projects/hirelytics-platform/node_modules/orchids-visual-edits/dist/index.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_... [truncated]
+2026-02-26T17:38:46.974Z [network][POST 200] /register
+  request: [{"fullName":"John Doe","email":"lakshmipriyaretheesh108@gmail.com","password":"johnpass123"}]
+  response: 3:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"SegmentViewNode"]
+5:"$Sreact.fragment"
+17:I["[project]/orchids-projects/hirelytics-platform/src/components/theme-provider.tsx [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_layout_tsx_9eaabbd5._.js"],"ThemeProvider"]
+19:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/client/components/layout-router.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"default"]
+1b:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/client/components/render-from-template-context.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"default"]
+2a:I["[project]/orchids-projects/hirelytics-platform/src/components/ui/sonner.tsx [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_layout_tsx_9eaabbd5._.js"],"Toaster"]
+2c:I["[project]/orchids-projects/hirelytics-platform/node_modules/orchids-visual-edits/dist/index.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_... [truncated]
+2026-02-27T14:59:41.434Z [console][warn] [Fast Refresh] rebuilding
+2026-02-27T14:59:41.438Z [console][warn] [Fast Refresh] done in 105ms
+2026-02-27T15:00:58.458Z [console][log] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-27T14:59:41.297Z [console][debug] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-27T14:59:41.434Z [console][log] [Fast Refresh] rebuilding
+2026-02-27T14:59:41.438Z [console][log] [Fast Refresh] done in 105ms
+2026-02-27T15:00:58.458Z [console][debug] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-27T15:00:58.441Z [network][POST 200] /register
+  request: [{"fullName":"John Doe","email":"lakshmipriyaretheesh04@gmail.com","password":"Password123"}]
+  response: 3:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"SegmentViewNode"]
+5:"$Sreact.fragment"
+17:I["[project]/orchids-projects/hirelytics-platform/src/components/theme-provider.tsx [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_layout_tsx_9eaabbd5._.js"],"ThemeProvider"]
+19:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/client/components/layout-router.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"default"]
+1b:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/client/components/render-from-template-context.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"default"]
+2a:I["[project]/orchids-projects/hirelytics-platform/src/components/ui/sonner.tsx [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_layout_tsx_9eaabbd5._.js"],"Toaster"]
+2c:I["[project]/orchids-projects/hirelytics-platform/node_modules/orchids-visual-edits/dist/index.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_... [truncated]
+2026-02-27T14:59:41.434Z [console][warn] [Fast Refresh] rebuilding
+2026-02-27T14:59:41.438Z [console][warn] [Fast Refresh] done in 105ms
+2026-02-27T15:00:58.458Z [console][log] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-27T14:59:41.297Z [console][debug] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-27T14:59:41.434Z [console][log] [Fast Refresh] rebuilding
+2026-02-27T14:59:41.438Z [console][log] [Fast Refresh] done in 105ms
+2026-02-27T15:00:58.458Z [console][debug] __ORCHIDS_NAVIGATE__ http://localhost:3001/register
+2026-02-27T15:00:58.441Z [network][POST 200] /register
+  request: [{"fullName":"John Doe","email":"lakshmipriyaretheesh04@gmail.com","password":"Password123"}]
+  response: 3:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"SegmentViewNode"]
+5:"$Sreact.fragment"
+17:I["[project]/orchids-projects/hirelytics-platform/src/components/theme-provider.tsx [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_layout_tsx_9eaabbd5._.js"],"ThemeProvider"]
+19:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/client/components/layout-router.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"default"]
+1b:I["[project]/orchids-projects/hirelytics-platform/node_modules/next/dist/client/components/render-from-template-context.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_next_dist_d215c66e._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_favicon_ico_mjs_0ace8301._.js"],"default"]
+2a:I["[project]/orchids-projects/hirelytics-platform/src/components/ui/sonner.tsx [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_layout_tsx_9eaabbd5._.js"],"Toaster"]
+2c:I["[project]/orchids-projects/hirelytics-platform/node_modules/orchids-visual-edits/dist/index.js [app-client] (ecmascript)",["/_next/static/chunks/65e6b_a88ce338._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_components_0b12d268._.js","/_next/static/chunks/orchids-projects_hirelytics-platform_src_app_... [truncated]
