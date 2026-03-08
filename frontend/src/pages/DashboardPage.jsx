@@ -24,6 +24,12 @@ export default function DashboardPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Admins don't need onboarding
+    if (user && user.role === 'admin') {
+      navigate('/admin');
+      return;
+    }
+
     if (user && !user.onboardingCompleted) {
       navigate('/onboarding');
     } else {

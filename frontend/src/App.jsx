@@ -6,6 +6,7 @@ import DashboardLayout from './components/DashboardLayout';
 import { Toaster } from 'sonner';
 
 // Pages - Import these as you create them
+import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
@@ -15,6 +16,16 @@ import CompaniesPage from './pages/CompaniesPage';
 import DrivesPage from './pages/DrivesPage';
 import MockTestsPage from './pages/MockTestsPage';
 import NotificationsPage from './pages/NotificationsPage';
+import AIPredictorPage from './pages/AIPredictorPage';
+import PrepHubPage from './pages/PrepHubPage';
+import CompanyDetailPage from './pages/CompanyDetailPage';
+
+// Admin Pages
+import AdminDashboardPage from './pages/AdminDashboardPage';
+import AdminCompaniesPage from './pages/AdminCompaniesPage';
+import AdminStudentsPage from './pages/AdminStudentsPage';
+import AdminDrivesPage from './pages/AdminDrivesPage';
+import AdminNotificationsPage from './pages/AdminNotificationsPage';
 
 function App() {
   return (
@@ -22,6 +33,9 @@ function App() {
       <AuthProvider>
         <div className="dark min-h-screen bg-zinc-950">
           <Routes>
+            {/* Landing Page */}
+            <Route path="/" element={<LandingPage />} />
+
             {/* Public Routes */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
@@ -48,6 +62,26 @@ function App() {
               }
             />
             <Route
+              path="/ai-predictor"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AIPredictorPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/prep-hub"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <PrepHubPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/profile"
               element={
                 <ProtectedRoute>
@@ -63,6 +97,16 @@ function App() {
                 <ProtectedRoute>
                   <DashboardLayout>
                     <CompaniesPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/companies/:companyName"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <CompanyDetailPage />
                   </DashboardLayout>
                 </ProtectedRoute>
               }
@@ -98,8 +142,57 @@ function App() {
               }
             />
 
-            {/* Default Redirect */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            {/* Admin Routes */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AdminDashboardPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/companies"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AdminCompaniesPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/students"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AdminStudentsPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/drives"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AdminDrivesPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/notifications"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AdminNotificationsPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
           </Routes>
           <Toaster position="top-center" theme="dark" />
         </div>

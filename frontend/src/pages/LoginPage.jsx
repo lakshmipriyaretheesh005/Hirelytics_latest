@@ -17,9 +17,15 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await login(email, password);
+      const response = await login(email, password);
       toast.success('Logged in successfully!');
-      navigate('/dashboard');
+
+      // Redirect admin to admin panel, students to dashboard
+      if (response.user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       const errorMessage =
         error.response?.data?.error ||
@@ -94,6 +100,12 @@ export default function LoginPage() {
             <Link to="/register" className="text-blue-500 hover:underline font-medium">
               Create an account
             </Link>
+          </div>
+
+          <div className="mt-4 text-center">
+            <p className="text-xs text-zinc-500">
+              Admin? Use your admin credentials to access the admin panel
+            </p>
           </div>
         </div>
       </motion.div>

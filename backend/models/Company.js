@@ -3,31 +3,66 @@ import mongoose from 'mongoose';
 const companySchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   logo: String,
   industry: String,
   description: String,
   website: String,
-  location: String,
-  size: String, // e.g., "1000-5000 employees"
-  
-  // Eligibility criteria
-  eligibilityCriteria: {
+
+  // Eligibility
+  eligibility: {
     minCGPA: Number,
-    allowedBranches: [String],
-    maxBacklogs: Number,
-    graduationYears: [Number]
+    branches: [String],
+    backlogAllowed: Boolean,
+    yearOfPassing: Number
   },
-  
-  rating: {
-    type: Number,
-    min: 0,
-    max: 5
+
+  // Roles
+  roles: [{
+    title: { type: String },
+    type: { type: String },
+    package: { type: String },
+    description: { type: String },
+    _id: false
+  }],
+
+  // Selection Process
+  selectionProcess: {
+    rounds: [{
+      name: { type: String },
+      duration: { type: String },
+      sections: [String],
+      cutoff: { type: String },
+      topics: [String],
+      difficulty: { type: String },
+      description: { type: String },
+      _id: false
+    }]
   },
-  
-  tags: [String], // e.g., ["Product Based", "High Paying", "Remote"]
-  
+
+  // Preparation Topics
+  aptitudeTopics: [String],
+  technicalTopics: [String],
+  codingLanguages: [String],
+
+  // Questions
+  hrQuestions: [String],
+  sampleQuestions: [{
+    topic: { type: String },
+    question: { type: String },
+    difficulty: { type: String },
+    _id: false
+  }],
+
+  // Timeline and Stats
+  interviewTimeline: String,
+  averagePackage: String,
+  previouslyVisited: Boolean,
+  studentPlaced: Number,
+
+  // Admin fields
   isActive: {
     type: Boolean,
     default: true
