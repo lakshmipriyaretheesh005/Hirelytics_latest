@@ -26,6 +26,7 @@ import AdminCompaniesPage from './pages/AdminCompaniesPage';
 import AdminStudentsPage from './pages/AdminStudentsPage';
 import AdminDrivesPage from './pages/AdminDrivesPage';
 import AdminNotificationsPage from './pages/AdminNotificationsPage';
+import AdminMockTestsPage from './pages/AdminMockTestsPage';
 
 function App() {
   return (
@@ -189,6 +190,16 @@ function App() {
                 <ProtectedRoute>
                   <DashboardLayout>
                     <AdminNotificationsPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/mock-tests"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AdminMockTestsPage />
                   </DashboardLayout>
                 </ProtectedRoute>
               }

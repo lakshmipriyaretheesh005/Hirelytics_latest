@@ -5,7 +5,8 @@ import {
   applyToDrive,
   getMyApplications,
   createDrive,
-  updateDrive
+  updateDrive,
+  deleteDrive,
 } from '../controllers/driveController.js';
 import { authenticate } from '../middleware/auth.js';
 
@@ -21,5 +22,6 @@ router.post('/:id/apply', applyToDrive);
 // Admin routes
 router.post('/', createDrive);
 router.put('/:id', updateDrive);
+router.delete('/:id', deleteDrive);
 
 export default router;

@@ -139,7 +139,7 @@ export default function LandingPage() {
                     <FeatureCard
                         icon={<Search className="w-6 h-6 text-blue-500" />}
                         title="Eligibility Checker"
-                        description="Auto-check your eligibility for 100+ companies instantly based on your CGPA and branch."
+                        description="Auto-check your eligibility for 37+ companies instantly based on your CGPA and branch."
                     />
                     <FeatureCard
                         icon={<TrendingUp className="w-6 h-6 text-purple-500" />}
@@ -177,11 +177,11 @@ export default function LandingPage() {
                         <p className="text-zinc-500 text-sm font-medium uppercase tracking-wider">Students Placed</p>
                     </div>
                     <div>
-                        <p className="text-4xl md:text-5xl font-black text-blue-500 mb-2">120+</p>
+                        <p className="text-4xl md:text-5xl font-black text-blue-500 mb-2">37+</p>
                         <p className="text-zinc-500 text-sm font-medium uppercase tracking-wider">Companies</p>
                     </div>
                     <div>
-                        <p className="text-4xl md:text-5xl font-black text-white mb-2">₹44L</p>
+                        <p className="text-4xl md:text-5xl font-black text-white mb-2">₹12L</p>
                         <p className="text-zinc-500 text-sm font-medium uppercase tracking-wider">Highest Package</p>
                     </div>
                     <div>

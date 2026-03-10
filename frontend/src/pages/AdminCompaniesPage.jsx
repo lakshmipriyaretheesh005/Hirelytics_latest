@@ -124,8 +124,8 @@ export default function AdminCompaniesPage() {
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`px-2 py-1 text-xs font-semibold rounded ${company.isActive
-                                                ? 'bg-emerald-500/10 text-emerald-500'
-                                                : 'bg-red-500/10 text-red-500'
+                                            ? 'bg-emerald-500/10 text-emerald-500'
+                                            : 'bg-red-500/10 text-red-500'
                                             }`}>
                                             {company.isActive ? 'Active' : 'Inactive'}
                                         </span>
@@ -231,7 +231,7 @@ function CompanyFormModal({ company, onClose, onSuccess }) {
         { id: 'roles', label: 'Roles' },
         { id: 'selection', label: 'Selection Process' },
         { id: 'topics', label: 'Topics' },
-        { id: 'questions', label: 'Questions' },
+        { id: 'questions', label: 'Interview & Coding Qs' },
         { id: 'statistics', label: 'Statistics' },
     ];
 
@@ -392,26 +392,26 @@ function CompanyFormModal({ company, onClose, onSuccess }) {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-lg max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 z-50 bg-black/60 p-4 overflow-y-auto">
+            <div className="mx-auto w-full max-w-5xl my-4 bg-zinc-900 border border-zinc-800 rounded-lg max-h-[92vh] overflow-hidden flex flex-col">
                 {/* Header */}
-                <div className="p-6 border-b border-zinc-800">
+                <div className="p-6 border-b border-zinc-800 bg-zinc-900">
                     <h2 className="text-2xl font-bold text-white">
                         {company ? 'Edit Company' : 'Add Company'}
                     </h2>
                 </div>
 
                 {/* Tabs */}
-                <div className="border-b border-zinc-800 px-6 overflow-x-auto">
-                    <div className="flex gap-4">
+                <div className="relative z-40 border-b border-zinc-800 px-6 py-2 bg-zinc-900/95 backdrop-blur">
+                    <div className="flex flex-wrap items-center gap-2">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 type="button"
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`py-3 px-4 font-semibold text-sm border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id
-                                        ? 'border-blue-500 text-blue-500'
-                                        : 'border-transparent text-zinc-400 hover:text-zinc-300'
+                                className={`px-3 py-2 font-semibold text-sm leading-none rounded-md transition-colors whitespace-nowrap ${activeTab === tab.id
+                                    ? 'bg-blue-500/15 text-blue-400 border border-blue-500/40'
+                                    : 'text-zinc-400 border border-transparent hover:text-zinc-300 hover:bg-zinc-800/60'
                                     }`}
                             >
                                 {tab.label}
@@ -421,7 +421,7 @@ function CompanyFormModal({ company, onClose, onSuccess }) {
                 </div>
 
                 {/* Form Content */}
-                <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
+                <form onSubmit={handleSubmit} className="flex-1 min-h-0 overflow-y-auto">
                     <div className="p-6 space-y-4">
                         {/* Basic Info Tab */}
                         {activeTab === 'basic' && (
@@ -882,6 +882,15 @@ function CompanyFormModal({ company, onClose, onSuccess }) {
                         {/* Questions Tab */}
                         {activeTab === 'questions' && (
                             <div className="space-y-6">
+                                <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-3">
+                                    <p className="text-sm text-blue-200">
+                                        Coding Questions added below are used in both:
+                                        <span className="font-semibold"> Prep Hub </span>
+                                        and
+                                        <span className="font-semibold"> Company Details - Resources tab</span>.
+                                    </p>
+                                </div>
+
                                 {/* HR Questions */}
                                 <div>
                                     <label className="block text-sm font-semibold text-zinc-300 mb-2">
@@ -923,11 +932,11 @@ function CompanyFormModal({ company, onClose, onSuccess }) {
                                     </div>
                                 </div>
 
-                                {/* Sample Questions */}
+                                {/* Coding Questions */}
                                 <div>
                                     <div className="flex justify-between items-center mb-4">
                                         <label className="block text-sm font-semibold text-zinc-300">
-                                            Sample Questions
+                                            Coding Questions (Prep Hub + Company Resources)
                                         </label>
                                         <button
                                             type="button"
@@ -1067,7 +1076,7 @@ function CompanyFormModal({ company, onClose, onSuccess }) {
                     </div>
 
                     {/* Form Actions */}
-                    <div className="p-6 border-t border-zinc-800 flex items-center justify-end gap-3">
+                    <div className="p-6 border-t border-zinc-800 flex items-center justify-end gap-3 bg-zinc-900 sticky bottom-0 z-20">
                         <button
                             type="button"
                             onClick={onClose}

@@ -2,6 +2,13 @@ import mongoose from 'mongoose';
 import bcryptjs from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    unique: true,
+    sparse: true,
+    lowercase: true,
+    trim: true,
+  },
   email: {
     type: String,
     required: true,
@@ -36,29 +43,37 @@ const userSchema = new mongoose.Schema({
   linkedinProfile: String,
   githubProfile: String,
   portfolioWebsite: String,
-  
+
   // Onboarding
   onboardingCompleted: {
     type: Boolean,
     default: false
   },
-  
+
   // Settings
   emailNotifications: {
     type: Boolean,
     default: true
   },
-  
+
   isActive: {
     type: Boolean,
     default: true
   }
 }, { timestamps: true });
 
+// Keep username populated to avoid duplicate-null conflicts on legacy username index.
+userSchema.pre('validate', function (next) {
+  if (!this.username && this.email) {
+    this.username = this.email;
+  }
+  next();
+});
+
 // Hash password before saving
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-  
+
   try {
     const salt = await bcryptjs.genSalt(10);
     this.password = await bcryptjs.hash(this.password, salt);
@@ -69,12 +84,12 @@ userSchema.pre('save', async function(next) {
 });
 
 // Compare password method
-userSchema.methods.comparePassword = async function(enteredPassword) {
+userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcryptjs.compare(enteredPassword, this.password);
 };
 
 // Remove password from JSON output
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
   return obj;

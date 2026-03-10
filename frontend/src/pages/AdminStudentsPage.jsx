@@ -15,34 +15,12 @@ export default function AdminStudentsPage() {
 
     const fetchStudents = async () => {
         try {
-            // This endpoint should be created in backend
-            const res = await apiClient.get('/admin/students');
+            const res = await apiClient.get('/profile/students');
             setStudents(res.data.students || []);
         } catch (error) {
-            console.error('Failed to fetch students');
-            // Mock data for now
-            setStudents([
-                {
-                    _id: '1',
-                    fullName: 'John Doe',
-                    email: 'john@example.com',
-                    branch: 'CSE',
-                    cgpa: 8.5,
-                    semester: 7,
-                    phone: '9876543210',
-                    onboardingCompleted: true,
-                },
-                {
-                    _id: '2',
-                    fullName: 'Jane Smith',
-                    email: 'jane@example.com',
-                    branch: 'IT',
-                    cgpa: 9.0,
-                    semester: 7,
-                    phone: '9876543211',
-                    onboardingCompleted: true,
-                },
-            ]);
+            console.error('Failed to fetch students', error);
+            setStudents([]);
+            toast.error(error.response?.data?.error || 'Failed to fetch students');
         } finally {
             setLoading(false);
         }
@@ -196,8 +174,8 @@ export default function AdminStudentsPage() {
                                     <td className="px-6 py-4 text-zinc-300">{student.phone || 'N/A'}</td>
                                     <td className="px-6 py-4">
                                         <span className={`px-2 py-1 text-xs font-semibold rounded ${student.onboardingCompleted
-                                                ? 'bg-emerald-500/10 text-emerald-500'
-                                                : 'bg-amber-500/10 text-amber-500'
+                                            ? 'bg-emerald-500/10 text-emerald-500'
+                                            : 'bg-amber-500/10 text-amber-500'
                                             }`}>
                                             {student.onboardingCompleted ? 'Complete' : 'Pending'}
                                         </span>

@@ -7,7 +7,7 @@ import User from '../models/User.js';
 export const getCompanies = async (req, res, next) => {
   try {
     const companies = await Company.find({ isActive: true }).sort('-createdAt');
-    
+
     res.json({
       success: true,
       count: companies.length,
@@ -24,7 +24,7 @@ export const getCompanies = async (req, res, next) => {
 export const getCompany = async (req, res, next) => {
   try {
     const company = await Company.findById(req.params.id);
-    
+
     if (!company) {
       return res.status(404).json({ error: 'Company not found' });
     }
@@ -44,17 +44,23 @@ export const getCompany = async (req, res, next) => {
 export const getEligibleCompanies = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId);
-    
+
     if (!user || !user.onboardingCompleted) {
       return res.status(400).json({ error: 'Please complete your profile first' });
     }
 
-    const companies = await Company.find({
+    // Build eligibility filter
+    const filter = {
       isActive: true,
-      'eligibilityCriteria.minCGPA': { $lte: user.cgpa || 0 },
-      'eligibilityCriteria.allowedBranches': { $in: [user.branch] },
-      'eligibilityCriteria.graduationYears': { $in: [user.graduationYear] }
-    }).sort('-rating');
+      'eligibility.minCGPA': { $lte: user.cgpa || 0 }
+    };
+
+    // Add branch filter if user has branch
+    if (user.branch) {
+      filter['eligibility.branches'] = user.branch;
+    }
+
+    const companies = await Company.find(filter);
 
     res.json({
       success: true,

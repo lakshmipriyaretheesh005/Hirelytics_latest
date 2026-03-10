@@ -10,18 +10,18 @@ const Header = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
   return (
     <header className="h-16 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40 px-6 flex items-center justify-between">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 flex-1 min-w-0">
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="p-2 text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-800 rounded-md"
         >
           <Menu className="w-4 h-4" />
         </button>
-        <div className="relative hidden lg:block w-96">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
+        <div className="relative hidden md:block flex-1 max-w-4xl">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
           <input
             placeholder="Search companies, tests, resources..."
-            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500/50"
+            className="w-full bg-zinc-900/60 border border-zinc-800 rounded-xl pl-12 pr-5 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500/40"
           />
         </div>
       </div>

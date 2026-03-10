@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, FileText, Video, Code, ExternalLink, Download } from 'lucide-react';
+import { BookOpen, FileText, Code, Download, X } from 'lucide-react';
 import apiClient from '../utils/apiClient';
 
 export default function PrepHubPage() {
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedCompany, setSelectedCompany] = useState(null);
+    const questionSectionId = 'company-coding-questions';
 
     useEffect(() => {
         fetchCompanies();
@@ -29,133 +31,225 @@ export default function PrepHubPage() {
         );
     }
 
+    const companiesWithQuestions = companies.filter(
+        (company) => Array.isArray(company.sampleQuestions) && company.sampleQuestions.length > 0
+    );
+
+    const handleCardClick = (company) => {
+        setSelectedCompany(company);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedCompany(null);
+    };
+
     return (
         <div className="space-y-6">
             <div>
                 <h1 className="text-3xl font-bold text-white mb-2">Prep Hub</h1>
-                <p className="text-zinc-400">Company-specific preparation resources and materials</p>
+                <p className="text-zinc-400">Company-specific preparation resources and coding questions</p>
             </div>
 
             {/* Resource Categories */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-6 hover:bg-zinc-900 transition-colors cursor-pointer group">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-6 group">
                     <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
                         <FileText className="w-6 h-6 text-blue-500" />
                     </div>
-                    <h3 className="text-white font-bold mb-1">Interview Guides</h3>
-                    <p className="text-sm text-zinc-400">Past interview questions</p>
-                </div>
-
-                <div className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-6 hover:bg-zinc-900 transition-colors cursor-pointer group">
-                    <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-500/20 transition-colors">
-                        <Video className="w-6 h-6 text-purple-500" />
+                    <div className="flex items-center justify-between mb-1">
+                        <h3 className="text-white font-bold">Interview Guides</h3>
+                        <span className="text-[10px] px-2 py-1 rounded-full bg-zinc-800 text-zinc-400">Coming Soon</span>
                     </div>
-                    <h3 className="text-white font-bold mb-1">Video Tutorials</h3>
-                    <p className="text-sm text-zinc-400">Learn from experts</p>
+                    <p className="text-sm text-zinc-400">HR prep guides will be added soon</p>
                 </div>
 
-                <div className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-6 hover:bg-zinc-900 transition-colors cursor-pointer group">
+                <button
+                    type="button"
+                    onClick={() => {
+                        const section = document.getElementById(questionSectionId);
+                        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }}
+                    className="text-left border border-zinc-800 bg-zinc-900/50 rounded-xl p-6 hover:bg-zinc-900 transition-colors cursor-pointer group"
+                >
                     <div className="w-12 h-12 bg-amber-500/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-amber-500/20 transition-colors">
                         <Code className="w-6 h-6 text-amber-500" />
                     </div>
-                    <h3 className="text-white font-bold mb-1">Coding Practice</h3>
+                    <div className="flex items-center justify-between mb-1">
+                        <h3 className="text-white font-bold">Coding Practice</h3>
+                        <span className="text-[10px] px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-300">Active</span>
+                    </div>
                     <p className="text-sm text-zinc-400">Problem sets & solutions</p>
-                </div>
+                </button>
 
-                <div className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-6 hover:bg-zinc-900 transition-colors cursor-pointer group">
+                <div className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-6 group">
                     <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-500/20 transition-colors">
                         <Download className="w-6 h-6 text-emerald-500" />
                     </div>
-                    <h3 className="text-white font-bold mb-1">Study Materials</h3>
-                    <p className="text-sm text-zinc-400">PDFs & documents</p>
+                    <div className="flex items-center justify-between mb-1">
+                        <h3 className="text-white font-bold">Study Materials</h3>
+                        <span className="text-[10px] px-2 py-1 rounded-full bg-zinc-800 text-zinc-400">Coming Soon</span>
+                    </div>
+                    <p className="text-sm text-zinc-400">PDFs & curated docs will be added soon</p>
                 </div>
             </div>
 
-            {/* Company-wise Resources */}
-            <div>
-                <h2 className="text-xl font-bold text-white mb-4">Company Resources</h2>
-                {companies.length === 0 ? (
+            {/* Company-wise Coding Questions */}
+            <div id={questionSectionId}>
+                <h2 className="text-xl font-bold text-white mb-4">Company-wise Coding Questions</h2>
+                {companiesWithQuestions.length === 0 ? (
                     <div className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-12 text-center">
                         <BookOpen className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-                        <p className="text-zinc-400">No resources available yet</p>
-                        <p className="text-sm text-zinc-500 mt-2">Resources will be added as companies are registered</p>
+                        <p className="text-zinc-400">No coding questions available yet</p>
+                        <p className="text-sm text-zinc-500 mt-2">
+                            Admin can add questions from Admin Panel, then open Companies, Edit, and Questions tab.
+                        </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {companies.slice(0, 6).map((company) => (
-                            <div key={company._id} className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-6 hover:bg-zinc-900 transition-colors">
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className="w-12 h-12 bg-zinc-800 rounded-lg flex items-center justify-center">
-                                        <span className="text-xl font-bold text-zinc-400">{company.name[0]}</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {companiesWithQuestions.map((company) => {
+                            const questions = company.sampleQuestions || [];
+                            const easyCount = questions.filter((q) => q.difficulty === 'Easy').length;
+                            const mediumCount = questions.filter((q) => q.difficulty === 'Medium').length;
+                            const hardCount = questions.filter((q) => q.difficulty === 'Hard').length;
+
+                            return (
+                                <div
+                                    key={company._id}
+                                    className="border border-zinc-800 bg-gradient-to-b from-zinc-900 to-zinc-900/60 rounded-xl p-6 hover:border-blue-500/40 transition-all cursor-pointer"
+                                    onClick={() => handleCardClick(company)}
+                                    role="button"
+                                    tabIndex={0}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            handleCardClick(company);
+                                        }
+                                    }}
+                                >
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div>
+                                            <h3 className="text-white text-2xl font-black leading-tight">{company.name}</h3>
+                                            <p className="text-sm text-zinc-400 mt-1">{company.industry || 'Technology'}</p>
+                                        </div>
+                                        <div className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 border border-blue-500/30 text-blue-400">
+                                            {questions.length} Questions
+                                        </div>
                                     </div>
-                                    <span className="text-xs px-2 py-1 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20">
-                                        {company.industry || 'Tech'}
-                                    </span>
+
+                                    <div className="grid grid-cols-3 gap-2 mb-4 text-xs">
+                                        <div className="px-2 py-1 rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-semibold text-center">
+                                            Easy: {easyCount}
+                                        </div>
+                                        <div className="px-2 py-1 rounded border border-amber-500/30 bg-amber-500/10 text-amber-400 font-semibold text-center">
+                                            Medium: {mediumCount}
+                                        </div>
+                                        <div className="px-2 py-1 rounded border border-red-500/30 bg-red-500/10 text-red-400 font-semibold text-center">
+                                            Hard: {hardCount}
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        {questions.slice(0, 3).map((sq, idx) => (
+                                            <div key={`${company._id}-${idx}`} className="p-3 rounded-lg border border-zinc-800 bg-zinc-950/50">
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className="text-xs font-semibold text-blue-400">{sq.topic || 'Coding'}</span>
+                                                    <span className="text-[10px] px-2 py-1 rounded bg-zinc-800 text-zinc-300">{sq.difficulty || 'Medium'}</span>
+                                                </div>
+                                                <p className="text-sm text-zinc-200 line-clamp-2">{sq.question}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {questions.length > 3 && (
+                                        <p className="text-xs text-zinc-500 mt-3">+ {questions.length - 3} more questions in this company set</p>
+                                    )}
                                 </div>
-                                <h3 className="text-white font-bold mb-2">{company.name}</h3>
-                                <p className="text-sm text-zinc-400 mb-4 line-clamp-2">
-                                    {company.description || 'Placement preparation resources for ' + company.name}
-                                </p>
-                                <div className="space-y-2">
-                                    <button className="w-full flex items-center justify-between px-3 py-2 bg-zinc-950/50 border border-zinc-800 rounded-lg text-sm text-zinc-300 hover:bg-zinc-950 hover:border-zinc-700 transition-colors">
-                                        <span>Interview Questions</span>
-                                        <ExternalLink className="w-4 h-4" />
-                                    </button>
-                                    <button className="w-full flex items-center justify-between px-3 py-2 bg-zinc-950/50 border border-zinc-800 rounded-lg text-sm text-zinc-300 hover:bg-zinc-950 hover:border-zinc-700 transition-colors">
-                                        <span>Selection Process</span>
-                                        <FileText className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>
 
-            {/* Popular Resources */}
-            <div>
-                <h2 className="text-xl font-bold text-white mb-4">Popular Resources</h2>
-                <div className="space-y-3">
-                    <div className="border border-zinc-800 bg-zinc-900/50 rounded-lg p-4 flex items-center justify-between hover:bg-zinc-900 transition-colors cursor-pointer">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
-                                <FileText className="w-5 h-5 text-blue-500" />
-                            </div>
+            {/* Questions Modal */}
+            {selectedCompany && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                        {/* Modal Header */}
+                        <div className="sticky top-0 bg-zinc-900 border-b border-zinc-800 p-6 flex items-center justify-between">
                             <div>
-                                <h4 className="text-white font-medium">Common Interview Questions - All Companies</h4>
-                                <p className="text-sm text-zinc-400">Updated 2 days ago</p>
+                                <h2 className="text-2xl font-bold text-white">{selectedCompany.name}</h2>
+                                <p className="text-sm text-zinc-400 mt-1">Coding Questions - {selectedCompany.sampleQuestions.length} total</p>
                             </div>
+                            <button
+                                onClick={handleCloseModal}
+                                className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+                            >
+                                <X className="w-6 h-6 text-zinc-400" />
+                            </button>
                         </div>
-                        <ExternalLink className="w-5 h-5 text-zinc-500" />
-                    </div>
 
-                    <div className="border border-zinc-800 bg-zinc-900/50 rounded-lg p-4 flex items-center justify-between hover:bg-zinc-900 transition-colors cursor-pointer">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center">
-                                <Code className="w-5 h-5 text-purple-500" />
-                            </div>
-                            <div>
-                                <h4 className="text-white font-medium">Top 100 Coding Problems for Placements</h4>
-                                <p className="text-sm text-zinc-400">Updated 1 week ago</p>
-                            </div>
-                        </div>
-                        <ExternalLink className="w-5 h-5 text-zinc-500" />
-                    </div>
+                        {/* Modal Body - Questions by Difficulty */}
+                        <div className="p-6 space-y-6">
+                            {['Easy', 'Medium', 'Hard'].map((difficulty) => {
+                                const difficultyQuestions = selectedCompany.sampleQuestions.filter(
+                                    (q) => q.difficulty === difficulty
+                                );
 
-                    <div className="border border-zinc-800 bg-zinc-900/50 rounded-lg p-4 flex items-center justify-between hover:bg-zinc-900 transition-colors cursor-pointer">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-amber-500/10 rounded-lg flex items-center justify-center">
-                                <Video className="w-5 h-5 text-amber-500" />
-                            </div>
-                            <div>
-                                <h4 className="text-white font-medium">HR Interview Preparation Guide</h4>
-                                <p className="text-sm text-zinc-400">Updated 3 days ago</p>
-                            </div>
+                                if (difficultyQuestions.length === 0) return null;
+
+                                const colors = {
+                                    Easy: { border: 'border-emerald-500/30', bg: 'bg-emerald-500/10', text: 'text-emerald-400', badge: 'bg-emerald-500/20' },
+                                    Medium: { border: 'border-amber-500/30', bg: 'bg-amber-500/10', text: 'text-amber-400', badge: 'bg-amber-500/20' },
+                                    Hard: { border: 'border-red-500/30', bg: 'bg-red-500/10', text: 'text-red-400', badge: 'bg-red-500/20' }
+                                };
+
+                                const color = colors[difficulty];
+
+                                return (
+                                    <div key={difficulty}>
+                                        <div className={`px-3 py-1.5 rounded-lg inline-block mb-4 border ${color.border} ${color.bg}`}>
+                                            <h3 className={`text-sm font-bold ${color.text}`}>
+                                                {difficulty} ({difficultyQuestions.length})
+                                            </h3>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            {difficultyQuestions.map((question, idx) => (
+                                                <div
+                                                    key={`${difficulty}-${idx}`}
+                                                    className={`p-4 rounded-lg border ${color.border} bg-zinc-950/50 hover:bg-zinc-900 transition-colors`}
+                                                >
+                                                    <div className="flex items-start justify-between gap-3 mb-2">
+                                                        <span className={`text-xs font-semibold px-2 py-1 rounded ${color.bg} ${color.text}`}>
+                                                            {question.topic || 'Problem'}
+                                                        </span>
+                                                        <span className={`text-xs px-2 py-1 rounded ${color.badge} ${color.text} whitespace-nowrap`}>
+                                                            {difficulty}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-sm text-zinc-200 leading-relaxed">
+                                                        {question.question}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
-                        <ExternalLink className="w-5 h-5 text-zinc-500" />
+
+                        {/* Modal Footer */}
+                        <div className="sticky bottom-0 bg-zinc-900 border-t border-zinc-800 p-4 flex gap-3">
+                            <button
+                                onClick={handleCloseModal}
+                                className="flex-1 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg font-medium transition-colors"
+                            >
+                                Back to Prep Hub
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

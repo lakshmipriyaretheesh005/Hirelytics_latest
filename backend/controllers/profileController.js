@@ -6,7 +6,7 @@ import User from '../models/User.js';
 export const getProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -86,6 +86,31 @@ export const completeOnboarding = async (req, res, next) => {
       success: true,
       message: 'Onboarding completed successfully',
       profile: user
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get all students (Admin only)
+// @route   GET /api/profile/students
+// @access  Private/Admin
+export const getStudents = async (req, res, next) => {
+  try {
+    const requester = await User.findById(req.userId).select('role');
+
+    if (!requester || requester.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const students = await User.find({ role: 'student', isActive: true })
+      .select('-password')
+      .sort('-createdAt');
+
+    res.json({
+      success: true,
+      count: students.length,
+      students,
     });
   } catch (error) {
     next(error);

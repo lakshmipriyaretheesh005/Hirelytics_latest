@@ -5,12 +5,14 @@ import { toast } from 'sonner';
 
 export default function AdminDrivesPage() {
     const [drives, setDrives] = useState([]);
+    const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [editingDrive, setEditingDrive] = useState(null);
 
     useEffect(() => {
         fetchDrives();
+        fetchCompanies();
     }, []);
 
     const fetchDrives = async () => {
@@ -21,6 +23,15 @@ export default function AdminDrivesPage() {
             toast.error('Failed to fetch drives');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchCompanies = async () => {
+        try {
+            const res = await apiClient.get('/companies');
+            setCompanies(res.data.companies || []);
+        } catch (error) {
+            toast.error('Failed to fetch companies');
         }
     };
 
@@ -81,6 +92,7 @@ export default function AdminDrivesPage() {
             {showForm && (
                 <DriveFormModal
                     drive={editingDrive}
+                    companies={companies}
                     onClose={() => {
                         setShowForm(false);
                         setEditingDrive(null);
@@ -111,8 +123,8 @@ function DriveCard({ drive, onEdit, onDelete }) {
                         <Calendar className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h3 className="font-bold text-white">{drive.company?.name || drive.title}</h3>
-                        <p className="text-sm text-zinc-400">{drive.type || 'On-Campus'}</p>
+                        <h3 className="font-bold text-white">{drive.role || drive.title}</h3>
+                        <p className="text-sm text-zinc-400">{drive.company?.name || 'General Drive'}</p>
                     </div>
                 </div>
             </div>
@@ -121,13 +133,13 @@ function DriveCard({ drive, onEdit, onDelete }) {
                 <div className="flex items-center justify-between text-sm">
                     <span className="text-zinc-400">Date</span>
                     <span className="text-white font-semibold">
-                        {drive.date ? new Date(drive.date).toLocaleDateString() : 'TBD'}
+                        {drive.driveDate ? new Date(drive.driveDate).toLocaleDateString() : 'TBD'}
                     </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                     <span className="text-zinc-400">Registrations</span>
                     <span className="text-white font-semibold">
-                        {drive.registeredStudents?.length || 0} students
+                        {drive.applicants?.length || 0} students
                     </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
@@ -158,12 +170,30 @@ function DriveCard({ drive, onEdit, onDelete }) {
     );
 }
 
-function DriveFormModal({ drive, onClose, onSuccess }) {
+function DriveFormModal({ drive, companies, onClose, onSuccess }) {
+    const mapJobTypeToUiType = (jobType, fallbackLocation) => {
+        if (fallbackLocation) return fallbackLocation;
+        if (jobType === 'Internship') return 'Off-Campus';
+        if (jobType === 'Internship + FTE') return 'Virtual';
+        return 'On-Campus';
+    };
+
+    const mapUiTypeToJobType = (type) => {
+        if (type === 'Off-Campus') return 'Internship';
+        if (type === 'Virtual') return 'Internship + FTE';
+        return 'Full-time';
+    };
+
     const [formData, setFormData] = useState({
-        title: drive?.title || '',
-        company: drive?.company?._id || '',
-        date: drive?.date ? new Date(drive.date).toISOString().split('T')[0] : '',
-        type: drive?.type || 'On-Campus',
+        title: drive?.role || drive?.title || '',
+        company: drive?.company?._id || drive?.company || '',
+        date: drive?.driveDate
+            ? new Date(drive.driveDate).toISOString().split('T')[0]
+            : drive?.date
+                ? new Date(drive.date).toISOString().split('T')[0]
+                : '',
+        packageOffered: drive?.packageOffered || '',
+        type: mapJobTypeToUiType(drive?.jobType, drive?.location),
         status: drive?.status || 'upcoming',
         description: drive?.description || '',
     });
@@ -172,11 +202,22 @@ function DriveFormModal({ drive, onClose, onSuccess }) {
         e.preventDefault();
 
         try {
+            const payload = {
+                company: formData.company,
+                role: formData.title,
+                driveDate: formData.date,
+                location: formData.type,
+                jobType: mapUiTypeToJobType(formData.type),
+                status: formData.status,
+                description: formData.description,
+                packageOffered: formData.packageOffered?.trim() || 'TBD',
+            };
+
             if (drive) {
-                await apiClient.put(`/drives/${drive._id}`, formData);
+                await apiClient.put(`/drives/${drive._id}`, payload);
                 toast.success('Drive updated successfully');
             } else {
-                await apiClient.post('/drives', formData);
+                await apiClient.post('/drives', payload);
                 toast.success('Drive created successfully');
             }
             onSuccess();
@@ -197,6 +238,25 @@ function DriveFormModal({ drive, onClose, onSuccess }) {
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     <div>
                         <label className="block text-sm font-semibold text-zinc-300 mb-2">
+                            Company
+                        </label>
+                        <select
+                            value={formData.company}
+                            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                            required
+                        >
+                            <option value="">Select Company</option>
+                            {companies.map((company) => (
+                                <option key={company._id} value={company._id}>
+                                    {company.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-zinc-300 mb-2">
                             Title
                         </label>
                         <input
@@ -205,6 +265,19 @@ function DriveFormModal({ drive, onClose, onSuccess }) {
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                             required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-zinc-300 mb-2">
+                            Package Offered
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.packageOffered}
+                            onChange={(e) => setFormData({ ...formData, packageOffered: e.target.value })}
+                            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                            placeholder="e.g., 8 LPA"
                         />
                     </div>
 

@@ -39,17 +39,34 @@ export default function DashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
-      const [companiesRes, drivesRes, applicationsRes] = await Promise.all([
+      const [companiesRes, drivesRes, applicationsRes] = await Promise.allSettled([
         apiClient.get('/companies/eligible'),
         apiClient.get('/drives'),
         apiClient.get('/drives/my-applications')
       ]);
 
+      const companiesCount =
+        companiesRes.status === 'fulfilled' ? companiesRes.value.data.count || 0 : 0;
+      const drivesCount =
+        drivesRes.status === 'fulfilled' ? drivesRes.value.data.count || 0 : 0;
+      const applicationsCount =
+        applicationsRes.status === 'fulfilled' ? applicationsRes.value.data.count || 0 : 0;
+
       setStats({
-        companies: companiesRes.data.count || 0,
-        drives: drivesRes.data.count || 0,
-        applications: applicationsRes.data.count || 0
+        companies: companiesCount,
+        drives: drivesCount,
+        applications: applicationsCount,
       });
+
+      if (companiesRes.status === 'rejected') {
+        console.error('Failed to fetch eligible companies:', companiesRes.reason);
+      }
+      if (drivesRes.status === 'rejected') {
+        console.error('Failed to fetch drives:', drivesRes.reason);
+      }
+      if (applicationsRes.status === 'rejected') {
+        console.error('Failed to fetch applications:', applicationsRes.reason);
+      }
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     } finally {

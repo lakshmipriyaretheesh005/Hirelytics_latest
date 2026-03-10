@@ -20,6 +20,7 @@ export const register = async (req, res, next) => {
     }
 
     const user = new User({
+      username: normalizedEmail,
       fullName: normalizedFullName,
       email: normalizedEmail,
       password
@@ -28,7 +29,7 @@ export const register = async (req, res, next) => {
     await user.save();
 
     const token = generateToken(user._id);
-    
+
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
@@ -69,7 +70,7 @@ export const login = async (req, res, next) => {
     }
 
     const token = generateToken(user._id);
-    
+
     res.json({
       success: true,
       message: 'Logged in successfully',
@@ -93,7 +94,7 @@ export const login = async (req, res, next) => {
 export const getMe = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }

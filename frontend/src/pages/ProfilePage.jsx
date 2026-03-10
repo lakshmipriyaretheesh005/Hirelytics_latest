@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../utils/apiClient';
 import { toast } from 'sonner';
-import { ArrowLeft, Loader2, User } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
+  const isAdmin = user?.role === 'admin';
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -60,10 +61,10 @@ export default function ProfilePage() {
       <header className="border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-xl p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Link to="/dashboard" className="text-zinc-400 hover:text-white">
+            <Link to={isAdmin ? '/admin' : '/dashboard'} className="text-zinc-400 hover:text-white">
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <h1 className="text-2xl font-bold">Profile</h1>
+            <h1 className="text-2xl font-bold">{isAdmin ? 'Admin Profile' : 'Profile'}</h1>
           </div>
         </div>
       </header>
@@ -72,11 +73,14 @@ export default function ProfilePage() {
         <div className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-8">
           <div className="flex items-center space-x-4 mb-8 pb-8 border-b border-zinc-800">
             <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-3xl font-bold">
-              {formData.fullName.charAt(0).toUpperCase()}
+              {(formData.fullName?.charAt(0) || 'U').toUpperCase()}
             </div>
             <div>
               <h2 className="text-2xl font-bold">{formData.fullName}</h2>
               <p className="text-zinc-400">{formData.email}</p>
+              <span className="inline-block mt-2 px-2 py-1 text-xs uppercase tracking-wide rounded bg-zinc-800 text-zinc-300">
+                {isAdmin ? 'Administrator' : 'Student'}
+              </span>
             </div>
           </div>
 
@@ -89,7 +93,7 @@ export default function ProfilePage() {
                 <input
                   type="text"
                   value={formData.fullName}
-                  onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                   className="w-full px-4 py-3 bg-zinc-950/50 border border-zinc-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -102,36 +106,40 @@ export default function ProfilePage() {
                 <input
                   type="tel"
                   value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full px-4 py-3 bg-zinc-950/50 border border-zinc-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-2">
-                  CGPA
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={formData.cgpa}
-                  onChange={(e) => setFormData({...formData, cgpa: e.target.value})}
-                  className="w-full px-4 py-3 bg-zinc-950/50 border border-zinc-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-2">
-                  Branch
-                </label>
-                <input
-                  type="text"
-                  value={formData.branch}
-                  onChange={(e) => setFormData({...formData, branch: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="w-full px-4 py-3 bg-zinc-950/50 border border-zinc-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
+
+            {!isAdmin && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">
+                    CGPA
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={formData.cgpa}
+                    onChange={(e) => setFormData({ ...formData, cgpa: e.target.value })}
+                    className="w-full px-4 py-3 bg-zinc-950/50 border border-zinc-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">
+                    Branch
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.branch}
+                    onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
+                    className="w-full px-4 py-3 bg-zinc-950/50 border border-zinc-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-2">
@@ -139,7 +147,7 @@ export default function ProfilePage() {
               </label>
               <textarea
                 value={formData.bio}
-                onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                 rows={4}
                 className="w-full px-4 py-3 bg-zinc-950/50 border border-zinc-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Tell us about yourself..."
@@ -154,7 +162,7 @@ export default function ProfilePage() {
                 <input
                   type="url"
                   value={formData.linkedinProfile}
-                  onChange={(e) => setFormData({...formData, linkedinProfile: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, linkedinProfile: e.target.value })}
                   className="w-full px-4 py-3 bg-zinc-950/50 border border-zinc-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="https://linkedin.com/in/username"
                 />
@@ -167,7 +175,7 @@ export default function ProfilePage() {
                 <input
                   type="url"
                   value={formData.githubProfile}
-                  onChange={(e) => setFormData({...formData, githubProfile: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, githubProfile: e.target.value })}
                   className="w-full px-4 py-3 bg-zinc-950/50 border border-zinc-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="https://github.com/username"
                 />

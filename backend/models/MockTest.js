@@ -20,6 +20,10 @@ const mockTestSchema = new mongoose.Schema({
     required: true
   },
   description: String,
+  company: {
+    type: String,
+    trim: true
+  },
   category: {
     type: String,
     enum: ['Aptitude', 'Technical', 'Coding', 'Verbal', 'Logical'],
@@ -28,13 +32,13 @@ const mockTestSchema = new mongoose.Schema({
   duration: Number, // in minutes
   totalMarks: Number,
   questions: [questionSchema],
-  
+
   difficulty: {
     type: String,
     enum: ['Easy', 'Medium', 'Hard'],
     default: 'Medium'
   },
-  
+
   // Attempts tracking
   attempts: [{
     user: {
@@ -49,7 +53,7 @@ const mockTestSchema = new mongoose.Schema({
       default: Date.now
     }
   }],
-  
+
   isActive: {
     type: Boolean,
     default: true

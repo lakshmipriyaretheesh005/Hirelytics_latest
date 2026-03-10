@@ -5,16 +5,17 @@ import MockTest from '../models/MockTest.js';
 // @access  Private
 export const getMockTests = async (req, res, next) => {
   try {
-    const { category, difficulty } = req.query;
-    
+    const { category, difficulty, company } = req.query;
+
     const filter = { isActive: true };
     if (category) filter.category = category;
     if (difficulty) filter.difficulty = difficulty;
+    if (company) filter.company = company;
 
     const tests = await MockTest.find(filter)
       .select('-questions.correctAnswer -questions.explanation')
       .sort('-createdAt');
-    
+
     res.json({
       success: true,
       count: tests.length,
@@ -32,7 +33,7 @@ export const getMockTest = async (req, res, next) => {
   try {
     const test = await MockTest.findById(req.params.id)
       .select('-questions.correctAnswer -questions.explanation');
-    
+
     if (!test) {
       return res.status(404).json({ error: 'Mock test not found' });
     }
@@ -52,9 +53,9 @@ export const getMockTest = async (req, res, next) => {
 export const submitTest = async (req, res, next) => {
   try {
     const { answers, timeTaken } = req.body;
-    
+
     const test = await MockTest.findById(req.params.id);
-    
+
     if (!test) {
       return res.status(404).json({ error: 'Mock test not found' });
     }
@@ -106,7 +107,7 @@ export const getMyAttempts = async (req, res, next) => {
       const userAttempts = test.attempts.filter(
         att => att.user.toString() === req.userId
       );
-      
+
       userAttempts.forEach(attempt => {
         attempts.push({
           test: {
@@ -137,13 +138,88 @@ export const getMyAttempts = async (req, res, next) => {
 // @access  Private/Admin
 export const createMockTest = async (req, res, next) => {
   try {
-    const test = new MockTest(req.body);
+    if (req.userRole !== 'admin') {
+      return res.status(403).json({ error: 'Only admins can create mock tests' });
+    }
+
+    const payload = { ...req.body };
+
+    if (!Array.isArray(payload.questions) || payload.questions.length === 0) {
+      return res.status(400).json({ error: 'At least one question is required' });
+    }
+
+    if (!payload.totalMarks) {
+      payload.totalMarks = payload.questions.length;
+    }
+
+    if (!payload.duration) {
+      payload.duration = 30;
+    }
+
+    const test = new MockTest(payload);
     await test.save();
 
     res.status(201).json({
       success: true,
       message: 'Mock test created successfully',
       test
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get all mock test results for admin
+// @route   GET /api/mock-tests/admin/results
+// @access  Private/Admin
+export const getAdminMockTestResults = async (req, res, next) => {
+  try {
+    if (req.userRole !== 'admin') {
+      return res.status(403).json({ error: 'Only admins can view mock test results' });
+    }
+
+    const tests = await MockTest.find({ isActive: true })
+      .populate('attempts.user', 'fullName email')
+      .sort('-createdAt');
+
+    const formatted = tests.map((test) => {
+      const attempts = (test.attempts || []).map((attempt) => ({
+        user: attempt.user,
+        score: attempt.score,
+        percentage: test.questions.length
+          ? Number(((attempt.score / test.questions.length) * 100).toFixed(2))
+          : 0,
+        timeTaken: attempt.timeTaken,
+        attemptedAt: attempt.attemptedAt
+      }));
+
+      const attemptsCount = attempts.length;
+      const averageScore = attemptsCount
+        ? Number((attempts.reduce((sum, a) => sum + a.score, 0) / attemptsCount).toFixed(2))
+        : 0;
+      const bestScore = attemptsCount
+        ? Math.max(...attempts.map((a) => a.score))
+        : 0;
+
+      return {
+        _id: test._id,
+        title: test.title,
+        company: test.company || 'General',
+        category: test.category,
+        difficulty: test.difficulty,
+        duration: test.duration,
+        totalQuestions: test.questions.length,
+        attemptsCount,
+        averageScore,
+        bestScore,
+        attempts: attempts.sort((a, b) => new Date(b.attemptedAt) - new Date(a.attemptedAt))
+      };
+    });
+
+    res.json({
+      success: true,
+      count: formatted.length,
+      tests: formatted
     });
   } catch (error) {
     next(error);

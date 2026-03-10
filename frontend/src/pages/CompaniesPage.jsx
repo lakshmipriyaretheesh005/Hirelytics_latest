@@ -1,44 +1,69 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Search,
   ChevronRight,
   Building2,
   Briefcase,
   TrendingUp,
   Users,
 } from 'lucide-react';
-import { companiesData } from '../data/companiesData';
 import { cn } from '../lib/utils';
+import apiClient from '../utils/apiClient';
 
 export default function CompaniesPage() {
-  const [search, setSearch] = useState('');
+  const [companies, setCompanies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const response = await apiClient.get('/companies');
+        setCompanies(response.data.companies || []);
+      } catch (fetchError) {
+        console.error('Failed to fetch companies:', fetchError);
+        setError('Unable to load companies right now. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
+  const derivedPlacements = companies.reduce((sum, c) => sum + (c.studentPlaced || 0), 0);
+  const savedPlacements = Number(localStorage.getItem('adminTotalPlacements'));
+  const totalPlacements = Number.isNaN(savedPlacements) ? derivedPlacements : savedPlacements;
 
   // Calculate statistics
-  const stats = {
-    totalCompanies: companiesData.length,
-    avgPackage: (
-      companiesData.reduce((sum, c) => {
-        const pkg = parseFloat(c.averagePackage?.replace(' LPA', '') || c.roles[0]?.package?.replace(' LPA', '') || 0);
+  const averagePackage = companies.length
+    ? (
+      companies.reduce((sum, c) => {
+        const pkg = parseFloat(
+          c.averagePackage?.replace(' LPA', '') || c.roles?.[0]?.package?.replace(' LPA', '') || 0
+        );
         return sum + pkg;
-      }, 0) / companiesData.length
-    ).toFixed(2),
-    totalPlacements: companiesData.reduce((sum, c) => sum + (c.studentPlaced || 0), 0),
-    minCGPA: Math.min(...companiesData.map((c) => c.eligibility.minCGPA)),
+      }, 0) / companies.length
+    ).toFixed(2)
+    : '0.00';
+
+  const stats = {
+    totalCompanies: companies.length,
+    avgPackage: averagePackage,
+    totalPlacements,
+    minCGPA: companies.length
+      ? Math.min(...companies.map((c) => c.eligibility?.minCGPA || 0))
+      : 0,
   };
 
-  // Filter companies based on search
-  const filteredCompanies = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return companiesData;
-    return companiesData.filter((company) => {
-      const searchable = [company.name, company.industry, ...company.roles]
-        .join(' ')
-        .toLowerCase();
-      return searchable.includes(q);
-    });
-  }, [search]);
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="inline-block w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 pb-10">
@@ -81,18 +106,6 @@ export default function CompaniesPage() {
         />
       </div>
 
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
-        <input
-          type="text"
-          placeholder="Search companies by name, industry, or role..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-12 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition"
-        />
-      </div>
-
       {/* Important Note */}
       <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 flex gap-3">
         <div className="text-blue-400 font-black text-lg flex-shrink-0">ℹ</div>
@@ -107,17 +120,19 @@ export default function CompaniesPage() {
 
       {/* Companies Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-        {filteredCompanies.length > 0 ? (
-          filteredCompanies.map((company, index) => (
-            <CompanyCard key={company.name} company={company} index={index} />
-          ))
-        ) : (
-          <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
-            <Building2 className="w-12 h-12 text-zinc-700 mb-4" />
-            <p className="text-white font-semibold text-lg">No companies found</p>
-            <p className="text-zinc-500 mt-1">Try adjusting your search</p>
+        {error && (
+          <div className="md:col-span-2 border border-red-500/30 bg-red-500/10 rounded-lg p-4 text-red-300 text-sm">
+            {error}
           </div>
         )}
+        {!error && companies.length === 0 && (
+          <div className="md:col-span-2 border border-zinc-800 bg-zinc-900/60 rounded-lg p-8 text-center text-zinc-400">
+            No companies available right now.
+          </div>
+        )}
+        {companies.map((company, index) => (
+          <CompanyCard key={company.name} company={company} index={index} />
+        ))}
       </div>
     </div>
   );
@@ -148,9 +163,10 @@ function StatCard({ icon, label, value, color }) {
 }
 
 function CompanyCard({ company, index }) {
-  const rolesText = company.roles.map(r => r.title).slice(0, 2).join(', ');
-  const rolesMore = company.roles.length > 2 ? ` +${company.roles.length - 2} more` : '';
-  const packageAmount = company.averagePackage || company.roles[0]?.package || 'N/A';
+  const roles = company.roles || [];
+  const rolesText = roles.map((r) => r.title).slice(0, 2).join(', ');
+  const rolesMore = roles.length > 2 ? ` +${roles.length - 2} more` : '';
+  const packageAmount = company.averagePackage || roles[0]?.package || 'N/A';
   const roundsCount = company.selectionProcess?.rounds?.length || 0;
 
   return (
@@ -190,7 +206,7 @@ function CompanyCard({ company, index }) {
                   Min CGPA
                 </p>
                 <p className="text-lg font-black text-blue-400 mt-1">
-                  {company.eligibility.minCGPA}+
+                  {company.eligibility?.minCGPA ?? 'N/A'}
                 </p>
               </div>
               <div>
@@ -218,7 +234,7 @@ function CompanyCard({ company, index }) {
                 Branches
               </p>
               <div className="flex flex-wrap gap-2">
-                {company.eligibility.branches.map((branch) => (
+                {(company.eligibility?.branches || []).map((branch) => (
                   <span
                     key={branch}
                     className="px-2 py-1 text-xs font-semibold bg-zinc-800 text-zinc-300 rounded border border-zinc-700 group-hover:border-blue-500/30 transition-colors"

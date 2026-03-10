@@ -40,6 +40,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     { name: 'Companies', icon: Building2, href: '/admin/companies' },
     { name: 'Students', icon: Users, href: '/admin/students' },
     { name: 'Drives', icon: Calendar, href: '/admin/drives' },
+    { name: 'Mock Tests', icon: Trophy, href: '/admin/mock-tests' },
     { name: 'Notifications', icon: Bell, href: '/admin/notifications' },
   ]
 

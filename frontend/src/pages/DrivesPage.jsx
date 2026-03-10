@@ -67,21 +67,19 @@ export default function DrivesPage() {
         <div className="flex space-x-4 mb-8">
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              activeTab === 'all'
+            className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'all'
                 ? 'bg-blue-600 text-white'
                 : 'bg-zinc-800 text-zinc-400 hover:text-white'
-            }`}
+              }`}
           >
             All Drives
           </button>
           <button
             onClick={() => setActiveTab('applied')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              activeTab === 'applied'
+            className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'applied'
                 ? 'bg-blue-600 text-white'
                 : 'bg-zinc-800 text-zinc-400 hover:text-white'
-            }`}
+              }`}
           >
             My Applications ({myApplications.length})
           </button>
@@ -102,13 +100,13 @@ export default function DrivesPage() {
                   <div>
                     <div className="flex items-center space-x-3 mb-2">
                       <Briefcase className="w-5 h-5 text-blue-500" />
-                      <h3 className="text-xl font-semibold">{drive.role}</h3>
+                      <h3 className="text-xl font-semibold">{drive.role || drive.title || 'Drive'}</h3>
                     </div>
                     <p className="text-zinc-400">{drive.company?.name}</p>
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-semibold text-emerald-500">
-                      {drive.packageOffered}
+                      {drive.packageOffered || 'TBD'}
                     </div>
                     {drive.driveDate && (
                       <div className="text-sm text-zinc-400 mt-1">
@@ -143,26 +141,25 @@ export default function DrivesPage() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="text-xl font-semibold mb-1">
-                      {application.drive.role}
+                      {application.drive.role || application.drive.title || 'Drive'}
                     </h3>
                     <p className="text-zinc-400 mb-2">
                       {application.drive.company?.name}
                     </p>
-                    <span className={`px-3 py-1 rounded-full text-sm ${
-                      application.status === 'selected'
+                    <span className={`px-3 py-1 rounded-full text-sm ${application.status === 'selected'
                         ? 'bg-emerald-600/20 text-emerald-400'
                         : application.status === 'shortlisted'
-                        ? 'bg-blue-600/20 text-blue-400'
-                        : application.status === 'rejected'
-                        ? 'bg-red-600/20 text-red-400'
-                        : 'bg-zinc-600/20 text-zinc-400'
-                    }`}>
+                          ? 'bg-blue-600/20 text-blue-400'
+                          : application.status === 'rejected'
+                            ? 'bg-red-600/20 text-red-400'
+                            : 'bg-zinc-600/20 text-zinc-400'
+                      }`}>
                       {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
                     </span>
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-semibold text-emerald-500">
-                      {application.drive.packageOffered}
+                      {application.drive.packageOffered || 'TBD'}
                     </div>
                     <div className="text-sm text-zinc-400 mt-1">
                       Applied: {format(new Date(application.appliedAt), 'MMM dd, yyyy')}

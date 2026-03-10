@@ -4,7 +4,8 @@ import {
   getMockTest,
   submitTest,
   getMyAttempts,
-  createMockTest
+  createMockTest,
+  getAdminMockTestResults
 } from '../controllers/mockTestController.js';
 import { authenticate } from '../middleware/auth.js';
 
@@ -14,6 +15,7 @@ router.use(authenticate); // All routes require authentication
 
 router.get('/', getMockTests);
 router.get('/my-attempts', getMyAttempts);
+router.get('/admin/results', getAdminMockTestResults);
 router.get('/:id', getMockTest);
 router.post('/:id/submit', submitTest);
 

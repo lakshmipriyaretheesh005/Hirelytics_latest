@@ -10,7 +10,7 @@ export const getDrives = async (req, res, next) => {
     const drives = await Drive.find({ isActive: true })
       .populate('company', 'name logo industry')
       .sort('-driveDate');
-    
+
     res.json({
       success: true,
       count: drives.length,
@@ -28,7 +28,7 @@ export const getDrive = async (req, res, next) => {
   try {
     const drive = await Drive.findById(req.params.id)
       .populate('company', 'name logo industry website location');
-    
+
     if (!drive) {
       return res.status(404).json({ error: 'Drive not found' });
     }
@@ -48,7 +48,7 @@ export const getDrive = async (req, res, next) => {
 export const applyToDrive = async (req, res, next) => {
   try {
     const drive = await Drive.findById(req.params.id);
-    
+
     if (!drive) {
       return res.status(404).json({ error: 'Drive not found' });
     }
@@ -100,14 +100,14 @@ export const getMyApplications = async (req, res, next) => {
     const drives = await Drive.find({
       'applicants.user': req.userId
     })
-    .populate('company', 'name logo')
-    .sort('-createdAt');
+      .populate('company', 'name logo')
+      .sort('-createdAt');
 
     const applications = drives.map(drive => {
       const application = drive.applicants.find(
         app => app.user.toString() === req.userId
       );
-      
+
       return {
         drive: {
           _id: drive._id,
@@ -136,7 +136,14 @@ export const getMyApplications = async (req, res, next) => {
 // @access  Private/Admin
 export const createDrive = async (req, res, next) => {
   try {
-    const drive = new Drive(req.body);
+    const payload = {
+      ...req.body,
+      role: req.body.role || req.body.title,
+      driveDate: req.body.driveDate || req.body.date,
+      location: req.body.location || req.body.type,
+    };
+
+    const drive = new Drive(payload);
     await drive.save();
 
     res.status(201).json({
@@ -154,9 +161,16 @@ export const createDrive = async (req, res, next) => {
 // @access  Private/Admin
 export const updateDrive = async (req, res, next) => {
   try {
+    const payload = {
+      ...req.body,
+      role: req.body.role || req.body.title,
+      driveDate: req.body.driveDate || req.body.date,
+      location: req.body.location || req.body.type,
+    };
+
     const drive = await Drive.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      payload,
       { new: true, runValidators: true }
     );
 
@@ -168,6 +182,30 @@ export const updateDrive = async (req, res, next) => {
       success: true,
       message: 'Drive updated successfully',
       drive
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Delete drive (Admin only)
+// @route   DELETE /api/drives/:id
+// @access  Private/Admin
+export const deleteDrive = async (req, res, next) => {
+  try {
+    const drive = await Drive.findByIdAndUpdate(
+      req.params.id,
+      { isActive: false },
+      { new: true }
+    );
+
+    if (!drive) {
+      return res.status(404).json({ error: 'Drive not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Drive deleted successfully',
     });
   } catch (error) {
     next(error);
