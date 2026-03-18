@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ChevronRight,
@@ -11,7 +11,34 @@ import {
 import { cn } from '../lib/utils';
 import apiClient from '../utils/apiClient';
 
+function simpleDistance(a, b) {
+  if (!a || !b) {
+    return Math.max(a?.length || 0, b?.length || 0);
+  }
+
+  const aLower = a.toLowerCase();
+  const bLower = b.toLowerCase();
+  const matrix = Array.from({ length: aLower.length + 1 }, () => new Array(bLower.length + 1).fill(0));
+
+  for (let i = 0; i <= aLower.length; i += 1) matrix[i][0] = i;
+  for (let j = 0; j <= bLower.length; j += 1) matrix[0][j] = j;
+
+  for (let i = 1; i <= aLower.length; i += 1) {
+    for (let j = 1; j <= bLower.length; j += 1) {
+      const cost = aLower[i - 1] === bLower[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
+      );
+    }
+  }
+
+  return matrix[aLower.length][bLower.length];
+}
+
 export default function CompaniesPage() {
+  const [searchParams] = useSearchParams();
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -56,6 +83,30 @@ export default function CompaniesPage() {
       ? Math.min(...companies.map((c) => c.eligibility?.minCGPA || 0))
       : 0,
   };
+
+  const searchQuery = (searchParams.get('q') || '').trim().toLowerCase();
+  const filteredCompanies = companies.filter((company) => {
+    if (!searchQuery) {
+      return true;
+    }
+
+    const searchableText = [company.name, company.industry, company.website]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+
+    return searchableText.includes(searchQuery);
+  });
+
+  const suggestedCompanies = searchQuery
+    ? [...companies]
+      .sort((a, b) => {
+        const aName = a.name || '';
+        const bName = b.name || '';
+        return simpleDistance(aName, searchQuery) - simpleDistance(bName, searchQuery);
+      })
+      .slice(0, 3)
+    : [];
 
   if (loading) {
     return (
@@ -130,7 +181,29 @@ export default function CompaniesPage() {
             No companies available right now.
           </div>
         )}
-        {companies.map((company, index) => (
+        {!error && companies.length > 0 && filteredCompanies.length === 0 && (
+          <div className="md:col-span-2 border border-amber-500/30 bg-amber-500/10 rounded-lg p-6 text-center">
+            <p className="text-amber-200 font-semibold">Company not found</p>
+            <p className="text-amber-100/80 text-sm mt-1">"{searchQuery}" is not in the current company list.</p>
+            {suggestedCompanies.length > 0 && (
+              <div className="mt-4">
+                <p className="text-xs uppercase tracking-wider text-amber-100/70 mb-2">Did you mean</p>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {suggestedCompanies.map((company) => (
+                    <Link
+                      key={`suggest-${company._id || company.name}`}
+                      to={`/companies/${company.name.toLowerCase()}`}
+                      className="px-3 py-1.5 rounded-full text-xs font-semibold bg-zinc-900 text-amber-200 border border-amber-500/20 hover:border-amber-400/60 transition-colors"
+                    >
+                      {company.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {filteredCompanies.map((company, index) => (
           <CompanyCard key={company.name} company={company} index={index} />
         ))}
       </div>

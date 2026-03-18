@@ -8,7 +8,8 @@ export default function AdminCompaniesPage() {
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [editingCompany, setEditingCompany] = useState(null);
-    const [search, setSearch] = useState('');
+    const [searchInput, setSearchInput] = useState('');
+    const [appliedSearch, setAppliedSearch] = useState('');
 
     useEffect(() => {
         fetchCompanies();
@@ -16,8 +17,8 @@ export default function AdminCompaniesPage() {
 
     const fetchCompanies = async () => {
         try {
-            const res = await apiClient.get('/companies');
-            setCompanies(res.data.companies || []);
+            const companiesRes = await apiClient.get('/companies');
+            setCompanies(companiesRes.data.companies || []);
         } catch (error) {
             toast.error('Failed to fetch companies');
         } finally {
@@ -37,9 +38,25 @@ export default function AdminCompaniesPage() {
         }
     };
 
-    const filteredCompanies = companies.filter(c =>
-        c.name.toLowerCase().includes(search.toLowerCase())
-    );
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        setAppliedSearch(searchInput.trim().toLowerCase());
+    };
+
+    const filteredCompanies = companies
+        .filter((company) => {
+            if (!appliedSearch) {
+                return true;
+            }
+
+            const searchBlob = [company.name, company.industry, company.website]
+                .filter(Boolean)
+                .join(' ')
+                .toLowerCase();
+
+            return searchBlob.includes(appliedSearch);
+        })
+        .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
     return (
         <div className="space-y-6">
@@ -62,16 +79,40 @@ export default function AdminCompaniesPage() {
             </div>
 
             {/* Search */}
-            <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
-                <input
-                    type="text"
-                    placeholder="Search companies..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                />
-            </div>
+            <form onSubmit={handleSearchSubmit} className="flex gap-2">
+                <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
+                    <input
+                        type="text"
+                        placeholder="Search by company, industry, or website and press Enter"
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    />
+                </div>
+                <button
+                    type="submit"
+                    className="px-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors"
+                >
+                    Search
+                </button>
+                <button
+                    type="button"
+                    onClick={() => {
+                        setSearchInput('');
+                        setAppliedSearch('');
+                    }}
+                    className="px-4 py-3 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold transition-colors"
+                >
+                    Clear
+                </button>
+            </form>
+
+            {appliedSearch && (
+                <p className="text-sm text-zinc-400">
+                    Showing {filteredCompanies.length} result(s) for "{appliedSearch}"
+                </p>
+            )}
 
             {/* Companies Table */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">

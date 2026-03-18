@@ -40,8 +40,40 @@ export default function CompanyDetailPage() {
     }, [companyName]);
 
     useEffect(() => {
+        if (!['resources', 'contributions'].includes(activeTab)) {
+            return;
+        }
+
+        const refreshCompany = async () => {
+            try {
+                const response = await apiClient.get('/companies');
+                const companies = response.data.companies || [];
+                const normalizedName = decodeURIComponent(companyName || '').toLowerCase();
+                const foundCompany = companies.find((c) => c.name?.toLowerCase() === normalizedName);
+                if (foundCompany) {
+                    setCompany(foundCompany);
+                }
+            } catch {
+                // Keep existing data if refresh fails.
+            }
+        };
+
+        const onFocusRefresh = () => {
+            refreshCompany();
+        };
+
+        const refreshInterval = setInterval(refreshCompany, 20000);
+        window.addEventListener('focus', onFocusRefresh);
+
+        return () => {
+            clearInterval(refreshInterval);
+            window.removeEventListener('focus', onFocusRefresh);
+        };
+    }, [activeTab, companyName]);
+
+    useEffect(() => {
         const requestedTab = searchParams.get('tab');
-        const validTabs = ['overview', 'eligibility', 'selection', 'preparation', 'resources'];
+        const validTabs = ['overview', 'eligibility', 'selection', 'preparation', 'resources', 'contributions'];
         if (requestedTab && validTabs.includes(requestedTab)) {
             setActiveTab(requestedTab);
         }
@@ -76,6 +108,31 @@ export default function CompanyDetailPage() {
     const sampleQuestions = company.sampleQuestions || [];
     const hrQuestions = company.hrQuestions || [];
     const codingQuestionCount = sampleQuestions.length;
+    const approvedStudentContributions = (company.studentContributions || []).filter(
+        (item) => item.status === 'approved' || !item.status
+    );
+    const approvedHrContributions = approvedStudentContributions.filter(
+        (item) => (item.type || '').toLowerCase() === 'hr'
+    );
+    const combinedHrQuestions = [
+        ...hrQuestions,
+        ...approvedHrContributions.map((item) => item.question).filter(Boolean)
+    ];
+    const groupedApprovedContributions = approvedStudentContributions.reduce((acc, contribution) => {
+        const type = (contribution.type || 'question').toLowerCase();
+        if (!acc[type]) {
+            acc[type] = [];
+        }
+        acc[type].push(contribution);
+        return acc;
+    }, {});
+
+    const openPrepHubForCompany = () => {
+        const returnTo = `/companies/${encodeURIComponent(company.name)}?tab=${activeTab}`;
+        navigate(`/prep-hub?company=${encodeURIComponent(company.name)}`, {
+            state: { returnTo }
+        });
+    };
 
     return (
         <div className="space-y-6">
@@ -123,13 +180,13 @@ export default function CompanyDetailPage() {
             {/* Tabs */}
             <div className="border-b border-zinc-800">
                 <div className="flex gap-8">
-                    {['overview', 'eligibility', 'selection', 'preparation', 'resources'].map(tab => (
+                    {['overview', 'eligibility', 'selection', 'preparation', 'resources', 'contributions'].map(tab => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={`px-4 py-3 font-medium transition-colors capitalize ${activeTab === tab
-                                    ? 'text-blue-500 border-b-2 border-blue-500'
-                                    : 'text-zinc-400 hover:text-white'
+                                ? 'text-blue-500 border-b-2 border-blue-500'
+                                : 'text-zinc-400 hover:text-white'
                                 }`}
                         >
                             {tab}
@@ -187,7 +244,7 @@ export default function CompanyDetailPage() {
                                     <div>
                                         <p className="text-zinc-500 mb-1">Previously Visited</p>
                                         <p className="text-green-400 font-semibold">
-                                            {company.previouslyVisited ? 'Yes ✓' : 'No'}
+                                            {company.previouslyVisited ? 'Yes G��' : 'No'}
                                         </p>
                                     </div>
                                     <div>
@@ -220,7 +277,7 @@ export default function CompanyDetailPage() {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => navigate('/prep-hub')}
+                                    onClick={openPrepHubForCompany}
                                     className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-100 text-sm font-semibold transition-colors"
                                 >
                                     Open Prep Hub
@@ -397,7 +454,7 @@ export default function CompanyDetailPage() {
                             </div>
                             <button
                                 type="button"
-                                onClick={() => navigate('/prep-hub')}
+                                onClick={openPrepHubForCompany}
                                 className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors"
                             >
                                 Open Coding Questions in Prep Hub
@@ -406,8 +463,16 @@ export default function CompanyDetailPage() {
 
                         <div className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-6">
                             <h4 className="text-lg font-bold text-white mb-4">HR Questions</h4>
+                            {approvedHrContributions.length > 0 && (
+                                <p className="text-xs text-emerald-300 mb-3">
+                                    Includes {approvedHrContributions.length} approved student HR contribution(s).
+                                </p>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {hrQuestions.map((q, idx) => (
+                                {combinedHrQuestions.length === 0 && (
+                                    <p className="text-sm text-zinc-500">No HR questions available yet.</p>
+                                )}
+                                {combinedHrQuestions.map((q, idx) => (
                                     <div key={idx} className="bg-zinc-950/50 border border-zinc-800 rounded-lg p-3">
                                         <p className="text-zinc-300 text-sm">{q}</p>
                                     </div>
@@ -415,6 +480,47 @@ export default function CompanyDetailPage() {
                             </div>
                         </div>
 
+                    </div>
+                )}
+
+                {/* Contributions Tab */}
+                {activeTab === 'contributions' && (
+                    <div className="space-y-6">
+                        <div className="border border-zinc-800 bg-zinc-900/50 rounded-xl p-6">
+                            <h4 className="text-lg font-bold text-white mb-2">Verified Student Contributions</h4>
+                            <p className="text-sm text-zinc-400 mb-4">
+                                Student-provided interview questions verified by admins.
+                            </p>
+                            {Object.keys(groupedApprovedContributions).length === 0 ? (
+                                <p className="text-sm text-zinc-500">No verified student contributions yet.</p>
+                            ) : (
+                                <div className="space-y-5">
+                                    {Object.entries(groupedApprovedContributions).map(([type, contributions]) => (
+                                        <div key={type}>
+                                            <h5 className="text-sm font-semibold uppercase tracking-wide text-blue-300 mb-2">{type}</h5>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                {contributions.map((item) => (
+                                                    <div key={item._id} className="bg-zinc-950/60 border border-zinc-800 rounded-lg p-3">
+                                                        <p className="text-zinc-200 text-sm">{item.question}</p>
+                                                        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-zinc-400">
+                                                            {item.topic && (
+                                                                <span className="px-2 py-1 rounded bg-zinc-800 border border-zinc-700">{item.topic}</span>
+                                                            )}
+                                                            {item.round && (
+                                                                <span className="px-2 py-1 rounded bg-zinc-800 border border-zinc-700">{item.round}</span>
+                                                            )}
+                                                            {item.difficulty && (
+                                                                <span className="px-2 py-1 rounded bg-zinc-800 border border-zinc-700">{item.difficulty}</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>

@@ -6,6 +6,7 @@ import {
   Building2,
   BrainCircuit,
   BookOpen,
+  MessageSquare,
   Trophy,
   Bell,
   User,
@@ -38,6 +39,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const adminMenuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
     { name: 'Companies', icon: Building2, href: '/admin/companies' },
+    { name: 'Company Requests', icon: MessageSquare, href: '/admin/company-requests' },
     { name: 'Students', icon: Users, href: '/admin/students' },
     { name: 'Drives', icon: Calendar, href: '/admin/drives' },
     { name: 'Mock Tests', icon: Trophy, href: '/admin/mock-tests' },

@@ -1,12 +1,33 @@
 'use client'
 
 import { Menu, Search, Trophy } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
 import { useAuth } from '../context/AuthContext'
 
 const Header = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const { user } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [searchInput, setSearchInput] = useState('')
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const q = params.get('q') || ''
+    if (location.pathname === '/companies') {
+      setSearchInput(q)
+    }
+  }, [location.pathname, location.search])
+
+  const submitSearch = () => {
+    const query = searchInput.trim()
+    if (!query) {
+      navigate('/companies')
+      return
+    }
+    navigate(`/companies?q=${encodeURIComponent(query)}`)
+  }
 
   return (
     <header className="h-16 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40 px-6 flex items-center justify-between">
@@ -21,6 +42,14 @@ const Header = ({ isSidebarOpen, setIsSidebarOpen }) => {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
           <input
             placeholder="Search companies, tests, resources..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                submitSearch()
+              }
+            }}
             className="w-full bg-zinc-900/60 border border-zinc-800 rounded-xl pl-12 pr-5 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500/40"
           />
         </div>

@@ -23,6 +23,7 @@ import CompanyDetailPage from './pages/CompanyDetailPage';
 // Admin Pages
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminCompaniesPage from './pages/AdminCompaniesPage';
+import AdminCompanyRequestsPage from './pages/AdminCompanyRequestsPage';
 import AdminStudentsPage from './pages/AdminStudentsPage';
 import AdminDrivesPage from './pages/AdminDrivesPage';
 import AdminNotificationsPage from './pages/AdminNotificationsPage';
@@ -160,6 +161,16 @@ function App() {
                 <ProtectedRoute>
                   <DashboardLayout>
                     <AdminCompaniesPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/company-requests"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <AdminCompanyRequestsPage />
                   </DashboardLayout>
                 </ProtectedRoute>
               }

@@ -56,6 +56,52 @@ const companySchema = new mongoose.Schema({
     _id: false
   }],
 
+  // Student-contributed interview questions (requires admin review)
+  studentContributions: [{
+    type: {
+      type: String,
+      enum: ['question', 'coding', 'mcq', 'hr', 'technical', 'aptitude', 'other'],
+      default: 'question'
+    },
+    question: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    topic: {
+      type: String,
+      trim: true
+    },
+    round: {
+      type: String,
+      trim: true
+    },
+    difficulty: {
+      type: String,
+      enum: ['Easy', 'Medium', 'Hard'],
+      default: 'Medium'
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending'
+    },
+    submittedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    reviewedAt: Date,
+    reviewNote: {
+      type: String,
+      trim: true
+    }
+  }],
+
   // Timeline and Stats
   interviewTimeline: String,
   averagePackage: String,

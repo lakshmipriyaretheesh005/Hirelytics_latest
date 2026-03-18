@@ -1,16 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, FileText, Code, Download, X } from 'lucide-react';
 import apiClient from '../utils/apiClient';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function PrepHubPage() {
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedCompany, setSelectedCompany] = useState(null);
+    const [returnOnClose, setReturnOnClose] = useState(false);
+    const [returnToPath, setReturnToPath] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
     const questionSectionId = 'company-coding-questions';
 
     useEffect(() => {
         fetchCompanies();
+
+        const refreshOnFocus = () => fetchCompanies();
+        const refreshInterval = setInterval(fetchCompanies, 30000);
+
+        window.addEventListener('focus', refreshOnFocus);
+
+        return () => {
+            clearInterval(refreshInterval);
+            window.removeEventListener('focus', refreshOnFocus);
+        };
     }, []);
+
+    const getCompanyPracticeQuestions = (company) => {
+        const adminQuestions = (company.sampleQuestions || []).map((item) => ({
+            topic: item.topic || 'Coding',
+            question: item.question,
+            difficulty: item.difficulty || 'Medium',
+            source: 'admin'
+        }));
+
+        const codingContributionTypes = new Set(['coding']);
+        const contributionQuestions = (company.studentContributions || [])
+            .filter((item) => (item.status === 'approved' || !item.status) && codingContributionTypes.has(item.type))
+            .map((item) => ({
+                topic: item.topic || item.type || 'Community',
+                question: item.question,
+                difficulty: item.difficulty || 'Medium',
+                source: 'student'
+            }));
+
+        return [...adminQuestions, ...contributionQuestions];
+    };
 
     const fetchCompanies = async () => {
         try {
@@ -23,6 +60,40 @@ export default function PrepHubPage() {
         }
     };
 
+    useEffect(() => {
+        if (loading) {
+            return;
+        }
+
+        const requestedCompany = (searchParams.get('company') || '').trim().toLowerCase();
+
+        if (!requestedCompany) {
+            return;
+        }
+
+        const matchedCompany = companies.find(
+            (company) => company.name?.toLowerCase() === requestedCompany
+        );
+
+        if (matchedCompany) {
+            setSelectedCompany({
+                ...matchedCompany,
+                _practiceQuestions: getCompanyPracticeQuestions(matchedCompany)
+            });
+            setReturnToPath(location.state?.returnTo || '');
+            setReturnOnClose(Boolean(location.state?.returnTo));
+
+            const section = document.getElementById(questionSectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        const nextParams = new URLSearchParams(searchParams);
+        nextParams.delete('company');
+        setSearchParams(nextParams, { replace: true });
+    }, [loading, companies, searchParams, setSearchParams, location.state]);
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -32,14 +103,24 @@ export default function PrepHubPage() {
     }
 
     const companiesWithQuestions = companies.filter(
-        (company) => Array.isArray(company.sampleQuestions) && company.sampleQuestions.length > 0
+        (company) => getCompanyPracticeQuestions(company).length > 0
     );
 
     const handleCardClick = (company) => {
-        setSelectedCompany(company);
+        setSelectedCompany({
+            ...company,
+            _practiceQuestions: getCompanyPracticeQuestions(company)
+        });
+        setReturnOnClose(false);
+        setReturnToPath('');
     };
 
     const handleCloseModal = () => {
+        if (returnOnClose && returnToPath) {
+            navigate(returnToPath, { replace: true });
+            return;
+        }
+
         setSelectedCompany(null);
     };
 
@@ -107,7 +188,7 @@ export default function PrepHubPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {companiesWithQuestions.map((company) => {
-                            const questions = company.sampleQuestions || [];
+                            const questions = getCompanyPracticeQuestions(company);
                             const easyCount = questions.filter((q) => q.difficulty === 'Easy').length;
                             const mediumCount = questions.filter((q) => q.difficulty === 'Medium').length;
                             const hardCount = questions.filter((q) => q.difficulty === 'Hard').length;
@@ -156,6 +237,9 @@ export default function PrepHubPage() {
                                                     <span className="text-[10px] px-2 py-1 rounded bg-zinc-800 text-zinc-300">{sq.difficulty || 'Medium'}</span>
                                                 </div>
                                                 <p className="text-sm text-zinc-200 line-clamp-2">{sq.question}</p>
+                                                {sq.source === 'student' && (
+                                                    <p className="mt-1 text-[10px] uppercase tracking-wide text-emerald-400">Verified Student</p>
+                                                )}
                                             </div>
                                         ))}
                                     </div>
@@ -172,13 +256,13 @@ export default function PrepHubPage() {
 
             {/* Questions Modal */}
             {selectedCompany && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-start justify-center z-50 p-2 md:p-3 overflow-y-auto">
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-3xl w-full max-h-[96vh] overflow-y-auto">
                         {/* Modal Header */}
                         <div className="sticky top-0 bg-zinc-900 border-b border-zinc-800 p-6 flex items-center justify-between">
                             <div>
                                 <h2 className="text-2xl font-bold text-white">{selectedCompany.name}</h2>
-                                <p className="text-sm text-zinc-400 mt-1">Coding Questions - {selectedCompany.sampleQuestions.length} total</p>
+                                <p className="text-sm text-zinc-400 mt-1">Coding Questions - {selectedCompany._practiceQuestions.length} total</p>
                             </div>
                             <button
                                 onClick={handleCloseModal}
@@ -189,9 +273,9 @@ export default function PrepHubPage() {
                         </div>
 
                         {/* Modal Body - Questions by Difficulty */}
-                        <div className="p-6 space-y-6">
+                        <div className="px-6 pt-4 pb-6 space-y-6">
                             {['Easy', 'Medium', 'Hard'].map((difficulty) => {
-                                const difficultyQuestions = selectedCompany.sampleQuestions.filter(
+                                const difficultyQuestions = selectedCompany._practiceQuestions.filter(
                                     (q) => q.difficulty === difficulty
                                 );
 
@@ -230,6 +314,9 @@ export default function PrepHubPage() {
                                                     <p className="text-sm text-zinc-200 leading-relaxed">
                                                         {question.question}
                                                     </p>
+                                                    {question.source === 'student' && (
+                                                        <p className="mt-2 text-[10px] uppercase tracking-wide text-emerald-400">Verified Student Contribution</p>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>
@@ -244,7 +331,7 @@ export default function PrepHubPage() {
                                 onClick={handleCloseModal}
                                 className="flex-1 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg font-medium transition-colors"
                             >
-                                Back to Prep Hub
+                                {returnOnClose ? 'Back to Company' : 'Back to Prep Hub'}
                             </button>
                         </div>
                     </div>
