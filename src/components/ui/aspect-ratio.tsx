@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client"
 
 import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio"
@@ -9,3 +10,10 @@ function AspectRatio({
 }
 
 export { AspectRatio }
+=======
+import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio";
+
+const AspectRatio = AspectRatioPrimitive.Root;
+
+export { AspectRatio };
+>>>>>>> 1cf0693 (Initial commit)

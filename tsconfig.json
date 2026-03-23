@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+<<<<<<< HEAD
     "target": "ES2017",
     "lib": [
       "dom",
@@ -22,10 +23,17 @@
         "name": "next"
       }
     ],
+=======
+    "allowJs": true,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+>>>>>>> 1cf0693 (Initial commit)
     "paths": {
       "@/*": [
         "./src/*"
       ]
+<<<<<<< HEAD
     }
   },
   "include": [
@@ -40,3 +48,19 @@
     "node_modules"
   ]
 }
+=======
+    },
+    "skipLibCheck": true,
+    "strictNullChecks": false
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}
+>>>>>>> 1cf0693 (Initial commit)
