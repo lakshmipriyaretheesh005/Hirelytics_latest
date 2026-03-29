@@ -1,0 +1,324 @@
+[
+  {
+    "company": "EY",
+    "title": "Coloured Zenga",
+    "description": "Rahul is playing a game with coloured wooden blocks stacked one above the other. His task is to remove all wooden blocks from the stack without letting it fall and in the minimum number of steps. He can remove one block of a colour at a time, but he can remove multiple blocks of the same colour together.\n\nExample: If you remove [red,red] from (white,red,red,white), the resulting array is [white,white].\n\nNote: There are only two colour blocks – red and white.",
+    "difficulty": "Hard",
+    "category": "Stack"
+  },
+  {
+    "company": "EY",
+    "title": "Find the Missing Number",
+    "description": "Given an array arr[] of size n-1 with distinct integers in the range of [1, n]. This array represents a permutation of the integers from 1 to n with one element missing. Find the missing element in the array.\n\nExample: arr[] = [8, 2, 4, 5, 3, 7, 1] → Output: 6",
+    "difficulty": "Easy",
+    "category": "Array"
+  },
+  {
+    "company": "EY",
+    "title": "Merge Overlapping Intervals",
+    "description": "Given an array of time intervals where arr[i] = [start_i, end_i], merge all overlapping intervals into one and output the result which should have only mutually exclusive intervals.\n\nExample: arr[] = [[1, 3], [2, 4], [6, 8], [9, 10]] → Output: [[1, 4], [6, 8], [9, 10]]",
+    "difficulty": "Hard",
+    "category": "Interval"
+  },
+  {
+    "company": "EY",
+    "title": "Depth First Search (DFS) for a Graph",
+    "description": "Given a graph, traverse the graph using Depth First Search and find the order in which nodes are visited. DFS is a graph traversal method that starts from a source vertex and explores each path completely before backtracking and exploring other paths.",
+    "difficulty": "Medium",
+    "category": "Graph"
+  },
+  {
+    "company": "EY",
+    "title": "Implement Queue using Stacks",
+    "description": "Implement a queue using two stacks supporting the following operations:\n- enqueue(x): Insert element x at the end of the queue\n- dequeue(): Remove the element from the front of the queue\n- front(): Return the element at the front (or -1 if empty)\n- size(): Return the number of elements in the queue",
+    "difficulty": "Medium",
+    "category": "Stack & Queue"
+  },
+  {
+    "company": "EY",
+    "title": "Lowest Common Ancestor in a Binary Tree",
+    "description": "Given the root of a Binary Tree with unique values and two node values n1 and n2, find the Lowest Common Ancestor (LCA). LCA is the deepest node that has both n1 and n2 as descendants. Both node values are always present in the tree.",
+    "difficulty": "Hard",
+    "category": "Tree"
+  },
+  {
+    "company": "Infosys",
+    "title": "Count Digits",
+    "description": "Given a number n, return the count of digits in this number.\n\nExample: n = 1567 → Output: 4",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "Infosys",
+    "title": "Sort String of Characters",
+    "description": "Given a string of lowercase characters from 'a' - 'z', print the characters of this string in sorted order.\n\nExample: 'dcab' → 'abcd'",
+    "difficulty": "Easy",
+    "category": "String"
+  },
+  {
+    "company": "Infosys",
+    "title": "Common Divisors of Two Numbers",
+    "description": "Given two integer numbers, find the count of all common divisors of given numbers.\n\nExample: a = 12, b = 24 → Output: 6 (divisors: 1, 2, 3, 4, 6, 12)",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "Infosys",
+    "title": "Create Largest Concatenated Number",
+    "description": "Given an array of non-negative integers, arrange them such that their concatenation forms the largest possible number. Return the result as a string.\n\nExample: arr[] = [3, 30, 34, 5, 9] → Output: '9534330'",
+    "difficulty": "Hard",
+    "category": "Array"
+  },
+  {
+    "company": "Infosys",
+    "title": "Next Permutation",
+    "description": "Given an array of integers representing a permutation, implement the next permutation that rearranges the numbers into the lexicographically next greater permutation. If no such permutation exists, rearrange the numbers into the lowest possible order.\n\nExample: [2, 4, 1, 7, 5, 0] → [2, 4, 5, 0, 1, 7]",
+    "difficulty": "Hard",
+    "category": "Array"
+  },
+  {
+    "company": "Infosys",
+    "title": "Max Sum without Adjacents",
+    "description": "Given an array containing positive integers, find the maximum sum of elements of any possible subsequence such that no two numbers in the subsequence should be adjacent in the array.\n\nExample: arr[] = [5, 5, 10, 100, 10, 5] → Output: 110 (indices 0, 3, 5: 5+100+5)",
+    "difficulty": "Hard",
+    "category": "Dynamic Programming"
+  },
+  {
+    "company": "Infosys",
+    "title": "Form a Palindrome",
+    "description": "Given a string, find the minimum number of characters to be inserted to convert it to a palindrome string.\n\nExample: str = 'abcd' → Output: 3 (result: 'dcbabcd')",
+    "difficulty": "Hard",
+    "category": "String"
+  },
+  {
+    "company": "Infosys",
+    "title": "Longest Common Substring",
+    "description": "Given two strings s1 and s2, find the length of the longest common substring among the given strings.\n\nExample: s1 = 'ABCDGH', s2 = 'ACDGHR' → Output: 4 (substring: 'CDGH')",
+    "difficulty": "Medium",
+    "category": "String"
+  },
+  {
+    "company": "TCS",
+    "title": "Find the Smallest Number in an Array",
+    "description": "Given an array, find and return the smallest number from the array.",
+    "difficulty": "Easy",
+    "category": "Array"
+  },
+  {
+    "company": "TCS",
+    "title": "Find the Largest Number in an Array",
+    "description": "Given an array, find and return the largest number from the array.",
+    "difficulty": "Easy",
+    "category": "Array"
+  },
+  {
+    "company": "TCS",
+    "title": "Second Smallest and Second Largest Element",
+    "description": "Given an array, find the second smallest and second largest elements.",
+    "difficulty": "Easy",
+    "category": "Array"
+  },
+  {
+    "company": "TCS",
+    "title": "Reverse a Given Array",
+    "description": "Given an array, reverse the elements in-place.",
+    "difficulty": "Easy",
+    "category": "Array"
+  },
+  {
+    "company": "TCS",
+    "title": "Count Frequency of Each Element",
+    "description": "Given an array, count the frequency of each element and return or display the results.",
+    "difficulty": "Easy",
+    "category": "Array"
+  },
+  {
+    "company": "TCS",
+    "title": "Rotate Array by K Elements",
+    "description": "Rotate an array by K positions using the Block Swap Algorithm.",
+    "difficulty": "Medium",
+    "category": "Array"
+  },
+  {
+    "company": "TCS",
+    "title": "Average of All Elements",
+    "description": "Given an array, calculate and return the average of all elements.",
+    "difficulty": "Easy",
+    "category": "Array"
+  },
+  {
+    "company": "TCS",
+    "title": "Find the Median of the Array",
+    "description": "Given an array, find and return the median value.",
+    "difficulty": "Medium",
+    "category": "Array"
+  },
+  {
+    "company": "TCS",
+    "title": "Remove Duplicates from Sorted Array",
+    "description": "Given a sorted array, remove all duplicate elements in-place and return the count.",
+    "difficulty": "Easy",
+    "category": "Array"
+  },
+  {
+    "company": "TCS",
+    "title": "Maximum Product Subarray",
+    "description": "Given an array of integers, find the maximum product of any subarray.",
+    "difficulty": "Hard",
+    "category": "Array"
+  },
+  {
+    "company": "TCS",
+    "title": "Check if a Number is Palindrome",
+    "description": "Given a number, check if it is a palindrome or not.",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "TCS",
+    "title": "Check if a Number is Prime",
+    "description": "Given a number, check if it is a prime number or not.",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "TCS",
+    "title": "Check if a Number is Armstrong Number",
+    "description": "Given a number, check if it is an Armstrong number (narcissistic number) or not.",
+    "difficulty": "Medium",
+    "category": "Numbers"
+  },
+  {
+    "company": "TCS",
+    "title": "Sum of First N Natural Numbers",
+    "description": "Calculate the sum of first N natural numbers.",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "TCS",
+    "title": "Reverse Digits of a Number",
+    "description": "Given a number, reverse its digits and return the result.",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "TCS",
+    "title": "Print Fibonacci up to Nth Term",
+    "description": "Generate and print the Fibonacci sequence up to the Nth term.",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "TCS",
+    "title": "Factorial of a Number",
+    "description": "Calculate the factorial of a given number.",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "TCS",
+    "title": "GCD of Two Numbers",
+    "description": "Find the Greatest Common Divisor (GCD) of two given numbers.",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "TCS",
+    "title": "LCM of Two Numbers",
+    "description": "Find the Least Common Multiple (LCM) of two given numbers.",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "TCS",
+    "title": "Sum of Digits of a Number",
+    "description": "Given a number, calculate the sum of all its digits.",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "TCS",
+    "title": "Check if a String is Palindrome",
+    "description": "Given a string, check if it is a palindrome or not.",
+    "difficulty": "Easy",
+    "category": "String"
+  },
+  {
+    "company": "TCS",
+    "title": "Count Vowels, Consonants, and Spaces",
+    "description": "Given a string, count the number of vowels, consonants, and spaces in it.",
+    "difficulty": "Easy",
+    "category": "String"
+  },
+  {
+    "company": "TCS",
+    "title": "Remove All Vowels from String",
+    "description": "Given a string, remove all vowels from it.",
+    "difficulty": "Easy",
+    "category": "String"
+  },
+  {
+    "company": "TCS",
+    "title": "Remove Spaces from String",
+    "description": "Given a string, remove all spaces from it.",
+    "difficulty": "Easy",
+    "category": "String"
+  },
+  {
+    "company": "TCS",
+    "title": "Reverse a String",
+    "description": "Given a string, reverse it.",
+    "difficulty": "Easy",
+    "category": "String"
+  },
+  {
+    "company": "TCS",
+    "title": "Find Non-repeating Characters",
+    "description": "Given a string, find all characters that appear only once (non-repeating).",
+    "difficulty": "Medium",
+    "category": "String"
+  },
+  {
+    "company": "TCS",
+    "title": "Check if Two Strings are Anagram",
+    "description": "Given two strings, check if they are anagrams of each other.",
+    "difficulty": "Medium",
+    "category": "String"
+  },
+  {
+    "company": "IBM",
+    "title": "Bus Routes in City Grid",
+    "description": "Given a map of a city in matrix format a * b where 'a' is the number of rows and 'b' is the number of columns. All buses operate along a row (start and end in the same row). Given the city map and bus routes, find the number of cells where buses don't operate.",
+    "difficulty": "Medium",
+    "category": "Array & Matrix"
+  },
+  {
+    "company": "IBM",
+    "title": "GCD of Array Elements",
+    "description": "Given an array of integers, find the GCD of all elements in the array. If the GCD is 1, return -1.",
+    "difficulty": "Easy",
+    "category": "Numbers"
+  },
+  {
+    "company": "IBM",
+    "title": "Palindrome from Substring Concatenation",
+    "description": "Given two strings a and b, check if a palindrome can be made by concatenating substrings from a and b.",
+    "difficulty": "Hard",
+    "category": "String"
+  },
+  {
+    "company": "IBM",
+    "title": "Remove Nth Node from Linked List Back",
+    "description": "Given a linked list, remove the nth node from the end of the list and return the head of the modified list.",
+    "difficulty": "Medium",
+    "category": "Linked List"
+  },
+  {
+    "company": "IBM",
+    "title": "Minimum Cost Network Wiring",
+    "description": "An ISP has to setup connections between n nodes with at most m connections. Each node has two options: be a host or be linked to another node. Determine the minimum cost of wiring the whole network.",
+    "difficulty": "Hard",
+    "category": "Graph & Optimization"
+  }
+]
